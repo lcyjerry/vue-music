@@ -1,24 +1,42 @@
 <template>
   <div class="recommend">
-    <div class="recommend-content">
-      <div v-if="recommends.length" class="slider-wrapper">
-        <slider>
-          <div v-for="item in recommends" :key="item.id">
-            <a :href="item.linkUrl">
-              <img :src="item.picUrl" />
-            </a>
-          </div>
-        </slider>
+    <scroll ref="scroll" class="recommend-content" :data="discList">
+      <div>
+        <div v-if="recommends.length" class="slider-wrapper">
+          <slider class="slider-content">
+            <div v-for="item in recommends" :key="item.id">
+              <a :href="item.linkUrl">
+                <img @load="loadImage" :src="item.picUrl" />
+              </a>
+            </div>
+          </slider>
+        </div>
+        <div class="recommend-list">
+          <h1 class="list-title">热门歌单推荐</h1>
+          <ul>
+            <li class="item" v-for="item in discList" :key="item.dissid">
+              <div class="icon">
+                <img width="60" height="60" v-lazy="item.imgurl" />
+              </div>
+              <div class="text">
+                <h2 class="name">{{ item.creator.name }}</h2>
+                <p class="desc">{{ item.dissname }}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="recommend-list">
-        <h1 class="list-title">热门歌单推荐</h1>
-        <ul></ul>
+      <div v-show="!discList.length" class="loading-container">
+        <loading></loading>
       </div>
-    </div>
+    </scroll>
   </div>
 </template>
 
 <script>
+import Loading from "base/loading/loading";
+import Scroll from "base/scroll/scroll";
+import { getDiscList } from "api/recommend";
 import { getRecommend } from "api/recommend";
 import Slider from "base/slider/slider";
 
@@ -26,11 +44,13 @@ export default {
   data() {
     return {
       recommends: [],
+      discList: [],
     };
   },
 
   created() {
     this._getRecommend();
+    this._getDiscList();
   },
 
   methods: {
@@ -39,10 +59,25 @@ export default {
         this.recommends = res.data.slider;
       });
     },
+
+    _getDiscList() {
+      getDiscList().then((res) => {
+        this.discList = res.data.list;
+      });
+    },
+
+    loadImage() {
+      if (!this.checkLoaded) {
+        this.$refs.scroll.refresh();
+        this.checkLoaded = true;
+      }
+    },
   },
 
   components: {
     Slider,
+    Scroll,
+    Loading,
   },
 };
 </script>
@@ -99,8 +134,8 @@ export default {
           .desc
             color: $color-text-d
     .loading-container
-      position: absolute
-      width: 100%
-      top: 50%
-      transform: translateY(-50%)
+      position absolute
+      width 100%
+      top 50%
+      transform translateY(-50%)
 </style>
