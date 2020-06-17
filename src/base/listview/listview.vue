@@ -140,7 +140,6 @@ export default {
         let height2 = listHeight[i+1]
         if(!height2 || (-newY >= height1 && -newY < height2)){
           this.currentIndex = i
-          console.log(this.currentIndex);
           return
         }else{
           this.currentIndex = 0
