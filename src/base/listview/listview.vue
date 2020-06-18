@@ -34,7 +34,7 @@
     >
       <ul>
         <li
-          :class="{'current':currentIndex === index}"
+          :class="{ current: currentIndex === index }"
           :data-index="index"
           v-for="(item, index) in shortcutList"
           :key="index"
@@ -44,6 +44,9 @@
         </li>
       </ul>
     </div>
+    <div class="list-fixed" v-show="fixedTitle" ref="fixed">
+      <h1 class="fixed-title">{{ fixedTitle }}</h1>
+    </div>
   </scroll>
 </template>
 
@@ -52,12 +55,14 @@ import Scroll from "base/scroll/scroll";
 import { getData } from "common/js/dom";
 
 const ANCHOR_HEIGHT = 18;
+const TITLE_HEIGHT = 30;
 
 export default {
   data() {
     return {
       scrollY: -1,
       currentIndex: 0,
+      diff: -1,
     };
   },
 
@@ -80,6 +85,15 @@ export default {
       return this.data.map((group) => {
         return group.title.substr(0, 1);
       });
+    },
+
+    fixedTitle() {
+      if (this.scrollY > 0) {
+        return "";
+      }
+      return this.data[this.currentIndex]
+        ? this.data[this.currentIndex].title
+        : "";
     },
   },
 
@@ -105,6 +119,11 @@ export default {
     },
 
     _scrollTo(index) {
+      if (index < 0) {
+        index = 0;
+      } else if (index > this.listHeight.length - 2) {
+        index = this.listHeight.length - 2;
+      }
       this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0);
     },
 
@@ -128,24 +147,33 @@ export default {
       }, 20);
     },
 
-    scrollY(newY){
-      if(newY > 0){
+    scrollY(newY) {
+      if (newY > 0) {
         this.currentIndex = 0;
-        return
+        return;
       }
 
-      const listHeight = this.listHeight
-      for(let i = 0;i <listHeight.length; i++){
-        let height1 = listHeight[i]
-        let height2 = listHeight[i+1]
-        if(!height2 || (-newY >= height1 && -newY < height2)){
-          this.currentIndex = i
-          return
-        }else{
-          this.currentIndex = 0
+      const listHeight = this.listHeight;
+      for (let i = 0; i < listHeight.length; i++) {
+        let height1 = listHeight[i];
+        let height2 = listHeight[i + 1];
+        if (!height2 || (-newY >= height1 && -newY < height2)) {
+          this.currentIndex = i;
+          this.diff = height2 + newY;
+          return;
         }
       }
-    }
+    },
+
+    diff(newVal) {
+      let fixedTop =
+        newVal > 0 && newVal < TITLE_HEIGHT ? newVal - TITLE_HEIGHT : 0;
+      if (this.fixedTop === fixedTop) {
+        return;
+      }
+      this.fixedTop = fixedTop;
+      this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`;
+    },
   },
 
   components: {
