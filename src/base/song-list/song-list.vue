@@ -1,10 +1,15 @@
 <template>
   <div class="song-list">
     <ul>
-      <li class="item" v-for="(song, index) in songs" :key="index">
+      <li
+        @click="selectItem(song, index)"
+        class="item"
+        v-for="(song, index) in songs"
+        :key="index"
+      >
         <div class="content">
-          <h2 class="name">{{song.name}}</h2>
-          <p class="desc">{{getDesc(song)}}</p>
+          <h2 class="name">{{ song.name }}</h2>
+          <p class="desc">{{ getDesc(song) }}</p>
         </div>
       </li>
     </ul>
@@ -13,24 +18,29 @@
 
 <script>
 export default {
-  props:{
-    songs:{
-      type:Array,
-      default:[]
-    }
+  props: {
+    songs: {
+      type: Array,
+      default: [],
+    },
   },
 
-  methods:{
-    getDesc(song){
-      return `${song.singer} / ${song.album}`
-    }
-  }
+  methods: {
+    selectItem(song, index) {
+      this.$emit('select',song,index)
+    },
+
+    getDesc(song) {
+      return `${song.singer} / ${song.album}`;
+    },
+  },
 };
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
 @import "~common/stylus/variable"
 @import "~common/stylus/mixin"
+
 .song-list
   .item
     display: flex

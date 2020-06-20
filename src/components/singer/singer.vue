@@ -87,7 +87,7 @@ export default {
     },
 
     ...mapMutations({
-      setSinger:'SET_SINGER'
+      setSinger: "SET_SINGER",
     }),
   },
 
