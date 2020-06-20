@@ -18,6 +18,7 @@
         <ul>
           <li
             v-for="(item, index) in group.items"
+            @click="selectItem(item)"
             :key="index"
             class="list-group-item"
           >
@@ -47,11 +48,15 @@
     <div class="list-fixed" v-show="fixedTitle" ref="fixed">
       <h1 class="fixed-title">{{ fixedTitle }}</h1>
     </div>
+    <div v-show="!data.length" class="loading-container">
+      <loading></loading>
+    </div>
   </scroll>
 </template>
 
 <script>
 import Scroll from "base/scroll/scroll";
+import Loading from "base/loading/loading";
 import { getData } from "common/js/dom";
 
 const ANCHOR_HEIGHT = 18;
@@ -98,6 +103,10 @@ export default {
   },
 
   methods: {
+    selectItem(item) {
+      this.$emit("select", item);
+    },
+
     onShortcutTouchStart(e) {
       let archorIndex = getData(e.target, "index");
       let firstTouch = e.touches[0];
@@ -178,6 +187,7 @@ export default {
 
   components: {
     Scroll,
+    Loading,
   },
 };
 </script>
