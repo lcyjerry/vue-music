@@ -98,7 +98,6 @@ export default {
     },
 
     selectItem(item, index) {
-      console.log(item);
       this.selectPlay({
         list: this.songs,
         index,
