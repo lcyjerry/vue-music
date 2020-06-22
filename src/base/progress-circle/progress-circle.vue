@@ -1,8 +1,8 @@
 <template>
   <div class="progress-circle">
     <svg
-      width="32"
-      height="32"
+      :width="radius"
+      :height="radius"
       viewBox="0 0 100 100"
       version="1.1"
       xmlnss="http://www.w3.org/2000/svg"
@@ -20,7 +20,8 @@
         cx="50"
         cy="50"
         fill="transparent"
-        stroke-dasharray="100"
+        :stroke-dasharray="dashArray"
+        :stroke-dashoffset="dashOffset"
       ></circle>
     </svg>
     <slot></slot>
@@ -30,7 +31,27 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      dashArray: Math.PI * 100,
+    };
+  },
+
+  props: {
+    radius: {
+      type: Number,
+      default: 100,
+    },
+
+    percent: {
+      type: Number,
+      default: 0,
+    },
+  },
+
+  computed: {
+    dashOffset() {
+      return (1 - this.percent) * this.dashArray;
+    },
   },
 };
 </script>
