@@ -1,4 +1,6 @@
-import { getSongsUrl } from 'api/song'
+import { getLyric, getSongsUrl } from 'api/song'
+import { Base64 } from 'js-base64'
+
 
 export default class Song {
   constructor({ id, mid, singer, name, album, duration, image, url }) {
@@ -10,6 +12,15 @@ export default class Song {
     this.duration = duration
     this.image = image
     this.url = url
+  }
+
+  getLyric() {
+    getLyric(this.mid).then((res) => {
+      if (res.retcode === 0) {
+        this.lyric = Base64.decode(res.lyric)
+        console.log(this.lyric)
+      }
+    })
   }
 }
 
@@ -26,7 +37,7 @@ export function createSong(musicData) {
   })
 }
 
-export function processSongsUrl (songs) {
+export function processSongsUrl(songs) {
   if (!songs.length) {
     return Promise.resolve(songs)
   }

@@ -98,6 +98,7 @@ import { prefixStyle } from "common/js/dom";
 import ProgressBar from "base/progress-bar/progress-bar";
 import ProgressCircle from "base/progress-circle/progress-circle";
 import { playMode } from "common/js/config";
+import Lyric from "lyric-parser";
 import { shuffle } from "common/js/util";
 
 const transform = prefixStyle("transform");
@@ -245,6 +246,8 @@ export default {
       }
     },
 
+    getLyric() {},
+
     enter(el, done) {
       const { x, y, scale } = this._getPosAndScale();
 
@@ -332,6 +335,7 @@ export default {
       }
       this.resetCurrentIndex(list);
       this.setPlayList(list);
+      console.log(list);
     },
 
     resetCurrentIndex(list) {
@@ -349,6 +353,7 @@ export default {
       }
       this.$nextTick(() => {
         this.$refs.audio.play();
+        this.currentSong.getLyric();
       });
     },
 
