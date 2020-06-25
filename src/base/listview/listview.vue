@@ -123,6 +123,10 @@ export default {
       this._scrollTo(archorIndex);
     },
 
+    refresh() {
+      this.$refs.listview.refresh();
+    },
+
     scroll(pos) {
       this.scrollY = pos.y;
     },
