@@ -67,7 +67,6 @@ export function getDiscList() {
     return Promise.resolve(res.data)
   })
 }
-
 export function getSongList(disstid) {
   const url = debug ? '/api/getCdInfo' : 'http://ustbhuangyi.com/music/api/getCdInfo'
 

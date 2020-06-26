@@ -11,7 +11,6 @@ export const selectPlay = function ({ commit }, { list, index }) {
 }
 
 export const randomPlay = function ({ commit }, { list }) {
-  debugger
   commit(types.SET_PLAY_MODE, playMode.random)
   commit(types.SET_SEQUENCE_LIST, list)
 
