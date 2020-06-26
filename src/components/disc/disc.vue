@@ -14,6 +14,7 @@ export default {
   data() {
     return {
       songs: [],
+      song: [],
     };
   },
 
@@ -44,11 +45,20 @@ export default {
           processSongsUrl(this._normalizeSongs(res.cdlist[0].songlist)).then(
             (songs) => {
               this.songs = songs;
-              console.log(this.songs)
             }
           );
         }
       });
+    },
+
+    _normalizeSongs(list) {
+      let ret = [];
+      list.forEach((musicData) => {
+        if (isValidMusic(musicData)) {
+          ret.push(createSong(musicData));
+        }
+      });
+      return ret;
     },
 
     _normalizeSongs(list) {
@@ -69,8 +79,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .slide-enter-active, .slide-leave-active
-    transition: all 0.3s
-  .slide-enter, .slide-leave-to
-    transform: translate3d(100%, 0, 0)
+.slide-enter-active, .slide-leave-active
+  transition: all 0.3s
+.slide-enter, .slide-leave-to
+  transform: translate3d(100%, 0, 0)
 </style>

@@ -65,7 +65,7 @@ export default {
 
   methods: {
     handlePlayList(playList) {
-      const bottom = playList.length > 0 ? "60px" : "";
+      const bottom = playList.length > 0 ? "60px" : " ";
       this.$refs.recommend.style.bottom = bottom;
       this.$refs.scroll.refresh();
     },
@@ -73,6 +73,7 @@ export default {
     _getRecommend() {
       getRecommend().then((res) => {
         this.recommends = res.data.slider;
+        console.log(this.recommends)
       });
     },
 
@@ -94,7 +95,7 @@ export default {
         path: `/recommend/${item.dissid}`,
       });
 
-      this.setDisc(item)
+      this.setDisc(item);
     },
 
     ...mapMutations({
