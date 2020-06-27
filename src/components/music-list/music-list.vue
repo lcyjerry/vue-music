@@ -28,7 +28,7 @@
       ref="list"
     >
       <div class="song-list-wrapper">
-        <song-list @select="selectItem" :songs="songs"></song-list>
+        <song-list :rank="rank" @select="selectItem" :songs="songs"></song-list>
       </div>
       <div class="loading-container" v-show="!songs.length">
         <loading></loading>
@@ -71,6 +71,10 @@ export default {
       type: String,
       default: "",
     },
+    rank: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
@@ -99,7 +103,7 @@ export default {
   methods: {
     handlePlayList(playList) {
       const bottom = playList.length > 0 ? "60px" : "";
-      this.$refs.list.$el.style.bottom = bottom
+      this.$refs.list.$el.style.bottom = bottom;
       this.$refs.list.refresh();
     },
 

@@ -1,26 +1,60 @@
 <template>
   <transition appear name="slide">
-    <music-list  :title="title" :bgImage="bgImage"></music-list>
+    <music-list
+      :rank="rank"
+      :title="title"
+      :bgImage="bgImage"
+      :songs="songs"
+    ></music-list>
   </transition>
 </template>
 
 <script>
 import MusicList from "components/music-list/music-list";
 import { mapGetters } from "vuex";
+import { getMusicList } from "api/rank";
+import { createSong } from "common/js/song";
 
 export default {
-  // data() {
-  //   return {
-  //     songs: this.topList.songList
-  //   };
-  // },
-
-  created(){
-    console.log(this.topList)
+  data() {
+    return {
+      songs: [],
+      rank: true,
+    };
   },
 
   components: {
     MusicList,
+  },
+
+  created() {
+    this._getMusicList();
+  },
+
+  methods: {
+    _getMusicList() {
+      if (!this.topList.id) {
+        this.$router.push("/rank");
+        return;
+      }
+      getMusicList(this.topList.id).then((res) => {
+        if (res.code === 0) {
+          this.songs = this._normalizeSongs(res.songlist);
+          console.log(this.songs);
+        }
+      });
+    },
+
+    _normalizeSongs(list) {
+      let ret = [];
+      list.forEach((item) => {
+        const musicData = item.data;
+        if (musicData.songid && musicData.albumid) {
+          ret.push(createSong(musicData));
+        }
+      });
+      return ret;
+    },
   },
 
   computed: {
@@ -29,7 +63,10 @@ export default {
     },
 
     bgImage() {
-      return this.topList.picUrl;
+      if (this.songs.length) {
+        return this.songs[0].image;
+      }
+      return "";
     },
 
     ...mapGetters(["topList"]),
