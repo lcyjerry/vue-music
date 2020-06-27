@@ -45,7 +45,7 @@ export default {
         probeType: this.probeType,
         click: this.click,
       });
-    
+
       if (this.listenScroll) {
         let me = this;
         this.scroll.on("scroll", (pos) => {

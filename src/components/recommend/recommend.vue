@@ -73,7 +73,6 @@ export default {
     _getRecommend() {
       getRecommend().then((res) => {
         this.recommends = res.data.slider;
-        console.log(this.recommends)
       });
     },
 
