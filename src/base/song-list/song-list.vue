@@ -29,7 +29,7 @@ export default {
 
     rank: {
       type: Boolean,
-      defaulse: false,
+      default: false,
     },
   },
 

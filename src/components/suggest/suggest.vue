@@ -22,6 +22,9 @@
       </li>
       <loading v-show="hasMore" title=""></loading>
     </ul>
+    <div v-show="!hasMore && !result.length" class="no-result-wrapper">
+      <no-result title="抱歉，暂无搜索结果"></no-result>
+    </div>
   </scroll>
 </template>
 
@@ -30,7 +33,9 @@ import { search } from "api/search";
 import { createSong, isValidMusic, processSongsUrl } from "common/js/song";
 import Scroll from "base/scroll/scroll";
 import Loading from "base/loading/loading";
+import NoResult from "base/no-result/no-result";
 import Singer from "common/js/singer";
+import { mapMutations, mapActions } from "vuex";
 
 const TYPE_SINGER = "singer";
 const perpage = 30;
@@ -108,15 +113,17 @@ export default {
     },
 
     selectItem(item) {
-      console.log(1)
       if (item.type === TYPE_SINGER) {
-        const singer = new Signer({
+        const singer = new Singer({
           id: item.singermid,
           name: item.singername,
         });
         this.$router.push({
           path: `/search/${singer.id}`,
         });
+        this.setSinger(singer);
+      } else {
+        this.insertSong(item);
       }
     },
 
@@ -150,11 +157,18 @@ export default {
       });
       return ret;
     },
+
+    ...mapMutations({
+      setSinger: "SET_SINGER",
+    }),
+
+    ...mapActions(["insertSong"]),
   },
 
   components: {
     Scroll,
     Loading,
+    NoResult,
   },
 
   watch: {
