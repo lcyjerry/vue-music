@@ -37,6 +37,7 @@
     </div>
     <div ref="searchResult" class="search-result" v-show="query">
       <suggest
+        ref="suggest"
         @select="saveSearch"
         :query="query"
         @listScroll="blurInput"
@@ -88,7 +89,9 @@ export default {
     handlePlayList(playlist) {
       const bottom = playlist.length > 0 ? "60px" : "";
       this.$refs.shortcutWrapper.style.bottom = bottom;
+      this.$refs.shortCut.refresh();
       this.$refs.searchResult.style.bottom = bottom;
+      this.$refs.suggest.refresh();
     },
 
     _getHotKey() {
