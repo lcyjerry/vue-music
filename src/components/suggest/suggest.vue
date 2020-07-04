@@ -1,9 +1,11 @@
 <template>
   <scroll
     @scrollToEnd="searchMore"
+    @beforeScroll="listScroll"
     class="suggest"
     :data="result"
     :pullup="pullup"
+    :beforeScroll="beforeScroll"
     ref="suggest"
   >
     <ul class="suggest-list">
@@ -47,6 +49,7 @@ export default {
       result: [],
       pullup: true,
       hasMore: true,
+      beforeScroll: true,
     };
   },
 
@@ -125,6 +128,11 @@ export default {
       } else {
         this.insertSong(item);
       }
+      this.$emit("select");
+    },
+
+    listScroll() {
+      this.$emit("listScroll");
     },
 
     _checkMore(data) {

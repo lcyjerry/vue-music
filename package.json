@@ -11,13 +11,14 @@
     "better-scroll": "^1.15.1",
     "core-js": "^3.6.5",
     "create-keyframe-animation": "^0.1.0",
+    "good-storage": "^1.1.1",
+    "js-base64": "^2.1.9",
     "jsonp": "^0.2.1",
+    "lyric-parser": "^1.0.1",
     "vue": "^2.6.11",
     "vue-lazyload": "^1.0.3",
     "vue-router": "^3.2.0",
-    "vuex": "^3.4.0",
-    "js-base64": "^2.1.9",
-    "lyric-parser": "^1.0.1"
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.4.0",
