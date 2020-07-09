@@ -20,10 +20,10 @@
               :key="index"
               @click="selectItem(item, index)"
             >
-              <i class="current" :class="getCurrentIcon(item)"></i>
+              <i class="current" :class="getFavoriteIcon(item)"></i>
               <span class="text">{{ item.name }}</span>
-              <span class="like">
-                <i class="icon-not-favorite"></i>
+              <span @click.stop="toggleFavorite(item)" class="like">
+                <i :class="getFavoriteIcon(item)"></i>
               </span>
               <span class="delete" @click.stop="deleteOne(item)">
                 <i class="icon-delete"></i>
