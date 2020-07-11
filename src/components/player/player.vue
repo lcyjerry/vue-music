@@ -115,7 +115,7 @@
           </progress-circle>
         </div>
         <div class="control">
-          <i class="icon-playlist" @click.stop="showPlaylist"></i>
+          <i class="icon-playlist" @play="ready" @click.stop="showPlaylist"></i>
         </div>
       </div>
     </transition>
@@ -489,7 +489,8 @@ export default {
         this.currentLineNum = 0;
       }
 
-      setTimeout(() => {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
         this.$refs.audio.play();
         this.getLyric();
       }, 1000);

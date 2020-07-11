@@ -76,7 +76,6 @@ export default {
         path: `/rank/${item.id}`,
       });
       this.setTopList(item);
-      console.log(item);
     },
 
     ...mapMutations({

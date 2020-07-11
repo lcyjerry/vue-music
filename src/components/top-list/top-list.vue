@@ -40,7 +40,6 @@ export default {
       getMusicList(this.topList.id).then((res) => {
         if (res.code === 0) {
           this.songs = this._normalizeSongs(res.songlist);
-          console.log(this.songs);
         }
       });
     },

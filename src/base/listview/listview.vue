@@ -109,7 +109,6 @@ export default {
 
     onShortcutTouchStart(e) {
       let archorIndex = getData(e.target, "index");
-      console.log(e.target)
       let firstTouch = e.touches[0];
       this.touch.y1 = firstTouch.pageY;
       this.touch.archorIndex = archorIndex;
