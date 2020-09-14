@@ -1,7 +1,7 @@
 <template>
   <div class="slider" ref="slider">
     <div class="slider-group" ref="sliderGroup">
-      <slot> </slot>
+      <slot></slot>
     </div>
     <div class="dots">
       <span
@@ -9,8 +9,7 @@
         :key="index"
         class="dot"
         :class="{ active: currentPageIndex === index }"
-      >
-      </span>
+      ></span>
     </div>
   </div>
 </template>
@@ -54,15 +53,31 @@ export default {
     }, 20);
 
     window.addEventListener("resize", () => {
-      if (!this.slider) {
+      if (!this.slider || !this.slider.enabled) {
         return;
       }
-      this._setSliderWidth(true);
-      this.slider.refresh();
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = setTimeout(() => {
+        if (this.slider.isInTransition) {
+          this._onScrollEnd();
+        } else {
+          if (this.autoPlay) {
+            this._play();
+          }
+        }
+        this.refresh();
+      }, 60);
     });
   },
 
   methods: {
+    refresh() {
+      if (this.slider) {
+        this._setSliderWidth(true);
+        this.slider.refresh();
+      }
+    },
+
     _setSliderWidth(isResize) {
       this.children = this.$refs.sliderGroup.children;
       let width = 0;
@@ -94,21 +109,30 @@ export default {
           speed: 400,
         },
       });
-      this.slider.on("scrollEnd", () => {
-        let pageIndex = this.slider.getCurrentPage().pageX;
-        this.currentPageIndex = pageIndex;
-
+      this.slider.on("scrollEnd", this._onScrollEnd);
+      this.slider.on("touchend", () => {
         if (this.autoPlay) {
-          clearTimeout(this.timer);
           this._play();
         }
       });
+      this.slider.on("beforeScrollStart", () => {
+        if (this.autoPlay) {
+          clearTimeout(this.timer);
+        }
+      });
+    },
+    _onScrollEnd() {
+      let pageIndex = this.slider.getCurrentPage().pageX;
+      this.currentPageIndex = pageIndex;
+      if (this.autoPlay) {
+        this._play();
+      }
     },
 
     _play() {
-      let pageIndex = this.curretPageIndex + 1;
+      clearTimeout(this.timer);
       this.timer = setTimeout(() => {
-        this.slider.next(500);
+        this.slider.next();
       }, this.interval);
     },
   },
@@ -130,44 +154,59 @@ export default {
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-@import "~common/stylus/variable"
+@import '~common/stylus/variable';
 
-.slider
-  min-height: 1px
-  .slider-group
-    position: relative
-    overflow: hidden
-    white-space: nowrap
-    .slider-item
-      float: left
-      box-sizing: border-box
-      overflow: hidden
-      text-align: center
-      a
-        display: block
-        width: 100%
-        overflow: hidden
-        text-decoration: none
-      img
-        display: block
-        width: 100%
-  .dots
-    position: absolute
-    right: 0
-    left: 0
-    bottom: 12px
-    text-align: center
-    font-size: 0
-    .dot
-      transition .3s all cubic-bezier(.46, 1, .23, 1.52)
-      display: inline-block
-      margin: 0 4px
-      width: 8px
-      height: 8px
-      border-radius: 50%
-      background: $color-text-l
-      &.active
+.slider {
+  min-height: 1px;
+
+  .slider-group {
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+
+    .slider-item {
+      float: left;
+      box-sizing: border-box;
+      overflow: hidden;
+      text-align: center;
+
+      a {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        text-decoration: none;
+      }
+
+      img {
+        display: block;
+        width: 100%;
+      }
+    }
+  }
+
+  .dots {
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 12px;
+    text-align: center;
+    font-size: 0;
+
+    .dot {
+      transition: 0.3s all cubic-bezier(0.46, 1, 0.23, 1.52);
+      display: inline-block;
+      margin: 0 4px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: $color-text-l;
+
+      &.active {
         transform: scale(2, 1);
-        border-radius: 2px
-        background: $color-text-ll
+        border-radius: 2px;
+        background: $color-text-ll;
+      }
+    }
+  }
+}
 </style>
